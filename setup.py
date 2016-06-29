@@ -21,6 +21,9 @@ setup(
         "six",
         "virtualenv>=15.0.2",
     ],
+    tests_require=[
+        "tox",
+    ],
     classifiers=(
         'Intended Audience :: Developers',
         'Natural Language :: English',

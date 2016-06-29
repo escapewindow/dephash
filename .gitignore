@@ -1,1 +1,6 @@
 *.swp
+
+.tox
+*.egg-info
+__pycache__
+*.py[co]

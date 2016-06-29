@@ -74,7 +74,8 @@ def get_hashes(module_dict, output):
     pprint.pprint(hashes)
     for module, defn in module_dict.items():
         regex_module = module.replace('-', '[_-]')
-        regex_string = PACKAGE_REGEX.format(module=regex_module, version=defn['version'])
+        regex_string = PACKAGE_REGEX.format(module=regex_module,
+                                            version=defn['version'])
         print(regex_string)
         regex = re.compile(regex_string)
         for filename, hashstring in hashes.items():
@@ -90,7 +91,8 @@ def get_hashes(module_dict, output):
 def print_prod_req(module_dict, fh):
     print("# Generated from reqhash.py", file=fh)
     for module, defn in sorted(module_dict.items()):
-        print("{}=={} {}".format(module, defn['version'], defn['hash']), file=fh)
+        print("{}=={} {}".format(module, defn['version'], defn['hash']),
+              file=fh)
 
 
 def get_prod_path(req_dev_path):
@@ -141,7 +143,7 @@ def main(name=None):
         output = get_output([pip, 'hash', '--algorithm', 'sha512'] + file_list)
         get_hashes(module_dict, output)
         req_prod_path = get_prod_path(req_dev_path)
-        print("Writing pinned, hashed requirements to {}...".format(req_prod_path))
+        print("Writing pinned+hashed requirements to {}".format(req_prod_path))
         print_prod_req(module_dict, sys.stdout)
         with open(req_prod_path, "w") as fh:
             print_prod_req(module_dict, fh)

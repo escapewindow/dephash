@@ -1,6 +1,8 @@
 *.swp
 
 .tox
+htmlcov
 *.egg-info
 __pycache__
+.cache
 *.py[co]

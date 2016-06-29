@@ -6,6 +6,8 @@ Production installs sometimes call for pinning package versions; hash checking a
 
 With `reqhash`, a permissive `requirements-dev.txt` can be transformed into a fully version-pinned, hashed `requirements-prod.txt`.
 
+(By default, the output file will replace `-dev` with `-prod` in the filename, if applicable. If not, the output file will be named `reqhash.txt`.)
+
 Usage:
 
     reqhash requirements-dev.txt

@@ -9,7 +9,7 @@ setup(
     url="https://github.com/escapewindow/reqhash",
     packages=find_packages(),
     include_package_data=True,
-    zip_safe=False,
+    zip_safe=True,
     entry_points={
         "console_scripts": [
             "reqhash = reqhash:main",

@@ -36,14 +36,11 @@ def to_str(obj):
     return obj
 
 
-def get_output(cmd, include_stderr=False, **kwargs):
+def get_output(cmd, **kwargs):
     print("Getting output from {}".format(cmd))
     try:
         outfile = tempfile.TemporaryFile()
-        errfile = None
-        if include_stderr:
-            errfile = outfile
-        proc = subprocess.Popen(cmd, stdout=outfile, stderr=errfile, **kwargs)
+        proc = subprocess.Popen(cmd, stdout=outfile, **kwargs)
         rc = proc.wait()
         outfile.seek(0)
         output = to_str(outfile.read())

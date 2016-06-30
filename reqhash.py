@@ -103,9 +103,7 @@ def get_prod_path(req_dev_path):
     return os.path.join(parent_dir, prod_name)
 
 
-def has_pip(req_file):
-    with open(req_file, "r") as fh:
-        contents = fh.read()
+def has_pip(contents):
     regex = re.compile(PIP_REGEX)
     for line in contents.split('\n'):
         if regex.match(line):
@@ -141,10 +139,11 @@ def main(name=None):
         output = get_output([pip, 'freeze'])
         module_dict = parse_pip_freeze(output)
         # special case pip, which doesn't show up in 'pip freeze'
-        if has_pip(req_dev_path):
-             output = get_output([pip, '--version'])
-             pip_version = output.split(' ')[1]
-             module_dict['pip'] = {'version': pip_version}
+        with open(req_dev_path, "r") as fh:
+            if has_pip(fh.read()):
+                output = get_output([pip, '--version'])
+                pip_version = output.split(' ')[1]
+                module_dict['pip'] = {'version': pip_version}
         print(pprint.pformat(module_dict))
         # get hashes from the downloaded files
         output = get_output([pip, 'hash', '--algorithm', 'sha512'] + file_list)

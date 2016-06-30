@@ -152,6 +152,9 @@ def has_pip(contents):
 
 # main {{{1
 def main(name=None):
+    """the main shebang
+    """
+    # like ``if __name__ == '__main__':``, but easier to test
     if name not in (None, '__main__'):
         return
     if len(sys.argv) != 2:

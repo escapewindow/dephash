@@ -14,5 +14,7 @@ Usage
 
 (By default, the output file will replace ``-dev`` with ``-prod`` in the filename, if applicable. If not, the output file will be named ``reqhash.txt``.)
 
-.. important::
-    There may be multiple python files for any given module/version, especially between python2 and python3, or source vs. wheel.  This script only gives you one hash per module.  You can deal with this via separate files, e.g. ``requirements-py2-prod.txt``, or by combining various runs together, and specifying multiple ``--hash`` args per module.
+------
+NOTE
+------
+There may be multiple python files for any given module/version, especially between python2 and python3, or source vs. wheel.  This script only gives you one hash per module.  You can deal with this via separate files, e.g. ``requirements-py2-prod.txt``, or by combining various runs together, and specifying multiple ``--hash`` args per module.

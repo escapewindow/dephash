@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 """Unittests for reqhash
 """
-import json
 import os
 import pytest
 import reqhash
@@ -9,7 +8,7 @@ import six
 import subprocess
 import tempfile
 
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+from . import DATA_DIR, load_json, read_file
 
 # params {{{1
 TO_STR_PARAMS = [
@@ -61,16 +60,12 @@ GET_PROD_PATH_PARAMS = [(
     os.path.join(DATA_DIR, "reqhash.out"),
 )]
 
-
-# helper functions {{{1
-def load_json(path):
-    with open(path, "r") as fh:
-        return json.load(fh)
-
-
-def read_file(path):
-    with open(path, "r") as fh:
-        return fh.read()
+HAS_PIP_PARAMS = [
+    (os.path.join(DATA_DIR, "dev1.txt"), True),
+    (os.path.join(DATA_DIR, "dev2.txt"), False),
+    (os.path.join(DATA_DIR, "prod1.txt"), True),
+    (os.path.join(DATA_DIR, "prod2.txt"), False),
+]
 
 
 # die, usage {{{1
@@ -161,3 +156,10 @@ def test_print_prod_req(params):
 @pytest.mark.parametrize("params", GET_PROD_PATH_PARAMS)
 def test_get_prod_path(params):
     assert reqhash.get_prod_path(params[0]) == params[1]
+
+
+# has_pip {{{1
+@pytest.mark.parametrize("params", HAS_PIP_PARAMS)
+def test_has_pip(params):
+    contents = read_file(params[0])
+    assert reqhash.has_pip(contents) is params[1]

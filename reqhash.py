@@ -13,7 +13,7 @@ import tempfile
 from virtualenv import main as virtualenv_main
 
 PACKAGE_REGEX = r"""^{module}-{version}(\.tar\.gz|-py[23]\..*\.whl)$"""
-PIP_REGEX = r"""^pip[ >=<\d.]*$"""
+PIP_REGEX = r"""^pip[ >=<\d.]*($| *--hash)"""
 
 
 # helper functions {{{1
@@ -108,6 +108,7 @@ def has_pip(contents):
     for line in contents.split('\n'):
         if regex.match(line):
             return True
+    return False
 
 
 # main {{{1
@@ -118,6 +119,7 @@ def main(name=None):
         usage()
     tempdir = None
     venv_path = None
+    orig_dir = os.getcwd()
     try:
         # get the absolute path of the dev requirements file, since we'll
         # chdir later
@@ -158,6 +160,7 @@ def main(name=None):
             print_prod_req(module_dict, fh)
         print("Done.")
     finally:
+        os.chdir(orig_dir)
         for path in (tempdir, venv_path):
             if path is not None and os.path.exists(path):
                 shutil.rmtree(path)

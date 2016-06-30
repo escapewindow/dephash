@@ -12,7 +12,7 @@ Usage
 
     reqhash requirements-dev.txt
 
-(By default, the output file will replace ``-dev`` with ``-prod`` in the filename, if applicable. If not, the output file will be named ``reqhash.txt``.)
+(By default, the output file will replace ``-dev`` with ``-prod`` in the filename, if applicable. If not, the output file will be named ``reqhash.out``.)
 
 ------
 NOTE

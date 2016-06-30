@@ -53,6 +53,14 @@ PRINT_PROD_REQ_PARAMS = [(
     os.path.join(DATA_DIR, "prod2.txt"),
 )]
 
+GET_PROD_PATH_PARAMS = [(
+    os.path.join(DATA_DIR, "foo-dev.txt"),
+    os.path.join(DATA_DIR, "foo-prod.txt"),
+), (
+    os.path.join(DATA_DIR, "foo-dv.txt"),
+    os.path.join(DATA_DIR, "reqhash.out"),
+)]
+
 
 # helper functions {{{1
 def load_json(path):
@@ -147,3 +155,9 @@ def test_print_prod_req(params):
         fh.close()
         os.remove(path)
     assert contents == read_file(params[1])
+
+
+# get_prod_path {{{1
+@pytest.mark.parametrize("params", GET_PROD_PATH_PARAMS)
+def test_get_prod_path(params):
+    assert reqhash.get_prod_path(params[0]) == params[1]

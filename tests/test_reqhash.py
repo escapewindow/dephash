@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """Unittests for reqhash
 """
+import json
 import os
 import pytest
 import reqhash
@@ -27,45 +28,17 @@ GET_OUTPUT_IDS = ["stdout", "stdout+stderr"]
 
 PIP_FREEZE_PARAMS = [(
     os.path.join(DATA_DIR, "freeze1.txt"),
-    {
-        "mercurial": {"version": "3.8.3"},
-        "pluggy": {"version": "0.3.1"},
-        "powerline-status": {"version": "2.4"},
-        "py": {"version": "1.4.31"},
-        "six": {"version": "1.10.0"},
-        "tox": {"version": "2.3.1"},
-        "vboxapi": {"version": "1.0"},
-        "virtualenv": {"version": "14.0.6"},
-    }
+    os.path.join(DATA_DIR, "freeze1.json"),
 ), (
     os.path.join(DATA_DIR, "freeze2.txt"),
-    {
-        "aiohttp": {"version": "0.22.0a0"},
-        "arrow": {"version": "0.8.0"},
-        "chardet": {"version": "2.3.0"},
-        "defusedxml": {"version": "0.4.1"},
-        "ecdsa": {"version": "0.13"},
-        "flake8": {"version": "2.6.2"},
-        "frozendict": {"version": "0.6"},
-        "future": {"version": "0.15.2"},
-        "jsonschema": {"version": "2.5.1"},
-        "mccabe": {"version": "0.5.0"},
-        "mohawk": {"version": "0.3.2.1"},
-        "multidict": {"version": "1.1.0b4"},
-        "pefile": {"version": "2016.3.28"},
-        "pycodestyle": {"version": "2.0.0"},
-        "pycrypto": {"version": "2.6.1"},
-        "pyflakes": {"version": "1.2.3"},
-        "python-dateutil": {"version": "2.5.3"},
-        "python-jose": {"version": "0.7.0"},
-        "requests": {"version": "2.10.0"},
-        "signtool": {"version": "1.0.9a0"},
-        "six": {"version": "1.10.0"},
-        "slugid": {"version": "1.0.7"},
-        "taskcluster": {"version": "0.3.4"},
-        "virtualenv": {"version": "15.0.2"},
-    }
+    os.path.join(DATA_DIR, "freeze2.json"),
 )]
+
+
+# helper functions {{{1
+def load_json(path):
+    with open(path, "r") as fh:
+        return json.load(fh)
 
 
 # die, usage {{{1
@@ -114,4 +87,4 @@ def test_get_output_error():
 def test_parse_pip_freeze(params):
     with open(params[0], "r") as fh:
         module_dict = reqhash.parse_pip_freeze(fh.read())
-        assert module_dict == params[1]
+        assert module_dict == load_json(params[1])

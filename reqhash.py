@@ -18,26 +18,37 @@ PIP_REGEX = r"""^pip[ >=<\d.]*($| *--hash)"""
 
 # helper functions {{{1
 def die(message, exit_code=1):
+    """Print ``message`` on stderr, then exit ``exit_code``
+    """
     print(message, file=sys.stderr)
     sys.exit(exit_code)
 
 
 def usage():
+    """Shortcut function to print usage and die
+    """
     die("Usage: {} REQUIREMENTS_PATH".format(sys.argv[0]))
 
 
 def run_cmd(cmd, **kwargs):
+    """Print the command to run, then run it through ``subprocess.check_call``
+    """
     print("Running {}".format(cmd))
     return subprocess.check_call(cmd, **kwargs)
 
 
 def to_str(obj):
+    """Deal with bytes to unicode conversion in py3.
+    """
     if six.PY3 and isinstance(obj, six.binary_type):
         obj = obj.decode('utf-8')
     return obj
 
 
 def get_output(cmd, **kwargs):
+    """Run ``cmd``, then raise ``subprocess.CalledProcessError`` on non-zero
+    exit code, or return stdout text on zero exit code.
+    """
     print("Getting output from {}".format(cmd))
     try:
         outfile = tempfile.TemporaryFile()
@@ -56,6 +67,11 @@ def get_output(cmd, **kwargs):
 
 
 def parse_pip_freeze(output):
+    """Take the output from ``pip freeze`` and return a dictionary in the form
+    of
+
+        {module_name: {'version': version}, ...}
+    """
     module_dict = {}
     for line in output.rstrip().split('\n'):
         module, version = line.split('==')
@@ -64,6 +80,17 @@ def parse_pip_freeze(output):
 
 
 def get_hashes(module_dict, output):
+    """Take the dictionary from ``parse_pip_freeze`` and the output from
+    ``pip hash``, and add the hash string into the appropriate place in the
+    dictionary:
+
+        {module_name: {'version': version, 'hash': '--hash=HASH'}, ...}
+
+    ``module_dict`` is modified in-place.
+
+    If there are any modules in ``module_dict`` with no hash information,
+    die.
+    """
     # create a dict from the output
     messages = []
     lines = output.rstrip().split('\n')
@@ -71,6 +98,7 @@ def get_hashes(module_dict, output):
     hashes = dict([(x.rstrip(':'), y.lstrip()) for x, y in zip(it, it)])
     pprint.pprint(hashes)
     for module, defn in module_dict.items():
+        # Yay module names and package names not matching!
         regex_module = module.replace('-', '[_-]')
         regex_string = PACKAGE_REGEX.format(module=regex_module,
                                             version=defn['version'])
@@ -87,6 +115,9 @@ def get_hashes(module_dict, output):
 
 
 def print_prod_req(module_dict, fh):
+    """Take the dictionary from get_hashes and output it to the filehandle
+    ``fh``, in pinned+hashed requirements.txt format.
+    """
     print("# Generated from reqhash.py", file=fh)
     for module, defn in sorted(module_dict.items()):
         print("{}=={} {}".format(module, defn['version'], defn['hash']),
@@ -94,6 +125,11 @@ def print_prod_req(module_dict, fh):
 
 
 def get_prod_path(req_dev_path):
+    """Given a development requirements.txt path, build a production
+    requirements.txt path.  This just replaces ``-dev`` with ``-prod``,
+    defaulting to ``reqhash.out`` if ``-dev`` isn't in the ``req_dev_path``
+    basename.
+    """
     parent_dir = os.path.dirname(req_dev_path)
     dev_name = os.path.basename(req_dev_path)
     if '-dev' in dev_name:
@@ -104,6 +140,9 @@ def get_prod_path(req_dev_path):
 
 
 def has_pip(contents):
+    """Try to see if ``pip`` is in the contents of this requirements file,
+    since pip doesn't show up in the output of ``pip freeze``.
+    """
     regex = re.compile(PIP_REGEX)
     for line in contents.split('\n'):
         if regex.match(line):

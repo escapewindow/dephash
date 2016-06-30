@@ -13,6 +13,7 @@ import tempfile
 from virtualenv import main as virtualenv_main
 
 PACKAGE_REGEX = r"""^{module}-{version}(\.tar\.gz|-py[23]\..*\.whl)$"""
+PIP_REGEX = r"""^pip[ >=<\d.]*$"""
 
 
 # helper functions {{{1
@@ -102,6 +103,15 @@ def get_prod_path(req_dev_path):
     return os.path.join(parent_dir, prod_name)
 
 
+def has_pip(req_file):
+    with open(req_file, "r") as fh:
+        contents = fh.read()
+    regex = re.compile(PIP_REGEX)
+    for line in contents.split('\n'):
+        if regex.match(line):
+            return True
+
+
 # main {{{1
 def main(name=None):
     if name not in (None, '__main__'):
@@ -130,11 +140,11 @@ def main(name=None):
         run_cmd([pip, 'install', '--no-deps'] + file_list)
         output = get_output([pip, 'freeze'])
         module_dict = parse_pip_freeze(output)
-        # special case pip?
-        # if 'pip' not in module_dict:
-        #     output = get_output([pip, '--version'])
-        #     pip_version = output.split(' ')[1]
-        #     module_dict['pip'] = {'version': pip_version}
+        # special case pip, which doesn't show up in 'pip freeze'
+        if has_pip(req_dev_path):
+             output = get_output([pip, '--version'])
+             pip_version = output.split(' ')[1]
+             module_dict['pip'] = {'version': pip_version}
         print(pprint.pformat(module_dict))
         # get hashes from the downloaded files
         output = get_output([pip, 'hash', '--algorithm', 'sha512'] + file_list)

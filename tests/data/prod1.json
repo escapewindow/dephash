@@ -1,6 +1,14 @@
-{"pip": {"hash": "--hash=sha512:f6b56b8e87d61e834f9e8341cd6bb48b47bc449d7031fa31fa9303959d5bda4305c8c51afb574d995d85783e757a04555e888b968ace661f06ab421f841738e0",
-         "version": "8.1.2"},
- "six": {"hash": "--hash=sha512:a41b40b720c5267e4a47ffb98cdc79238831b4fbc0b20abb125504881b73ae38d5ef0215ee91f0d3582e7887244346e45da9410195d023105fccd96239f0ee95",
-         "version": "1.10.0"},
- "virtualenv": {"hash": "--hash=sha512:ba420bd240219c69907726e61beb88fd81a3c483e68400b7d3756e727f1d4d60d487b385584baca0bc445ac1b0939c086714ac2ff010a68f920e1b592727903d",
-                "version": "15.0.2"}}
+{
+    "pip": {
+        "hash": "--hash=sha512:f6b56b8e87d61e834f9e8341cd6bb48b47bc449d7031fa31fa9303959d5bda4305c8c51afb574d995d85783e757a04555e888b968ace661f06ab421f841738e0",
+        "version": "8.1.2"
+    },
+    "six": {
+        "hash": "--hash=sha512:a41b40b720c5267e4a47ffb98cdc79238831b4fbc0b20abb125504881b73ae38d5ef0215ee91f0d3582e7887244346e45da9410195d023105fccd96239f0ee95",
+        "version": "1.10.0"
+    },
+    "virtualenv": {
+        "hash": "--hash=sha512:ba420bd240219c69907726e61beb88fd81a3c483e68400b7d3756e727f1d4d60d487b385584baca0bc445ac1b0939c086714ac2ff010a68f920e1b592727903d",
+        "version": "15.0.2"
+    }
+}

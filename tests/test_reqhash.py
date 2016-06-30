@@ -34,11 +34,26 @@ PIP_FREEZE_PARAMS = [(
     os.path.join(DATA_DIR, "freeze2.json"),
 )]
 
+GET_HASHES_PARAMS = [(
+    os.path.join(DATA_DIR, "freeze_withpip1.json"),
+    os.path.join(DATA_DIR, "hash1.txt"),
+    os.path.join(DATA_DIR, "prod1.json"),
+), (
+    os.path.join(DATA_DIR, "freeze2.json"),
+    os.path.join(DATA_DIR, "hash2.txt"),
+    os.path.join(DATA_DIR, "prod2.json"),
+)]
+
 
 # helper functions {{{1
 def load_json(path):
     with open(path, "r") as fh:
         return json.load(fh)
+
+
+def read_file(path):
+    with open(path, "r") as fh:
+        return fh.read()
 
 
 # die, usage {{{1
@@ -85,6 +100,25 @@ def test_get_output_error():
 # parse_pip_freeze {{{1
 @pytest.mark.parametrize("params", PIP_FREEZE_PARAMS)
 def test_parse_pip_freeze(params):
-    with open(params[0], "r") as fh:
-        module_dict = reqhash.parse_pip_freeze(fh.read())
-        assert module_dict == load_json(params[1])
+    output = read_file(params[0])
+    module_dict = reqhash.parse_pip_freeze(output)
+    assert module_dict == load_json(params[1])
+
+
+# get_hashes {{{1
+@pytest.mark.parametrize("params", GET_HASHES_PARAMS)
+def test_get_hashes(params):
+    module_dict = load_json(params[0])
+    output = read_file(params[1])
+    result = load_json(params[2])
+    reqhash.get_hashes(module_dict, output)
+    assert module_dict == result
+
+
+@pytest.mark.parametrize("params", GET_HASHES_PARAMS)
+def test_get_hashes_broken(params):
+    module_dict = load_json(params[0])
+    output = read_file(params[1])
+    module_dict["unknown-module"] = {"version": "unknown-version"}
+    with pytest.raises(SystemExit):
+        reqhash.get_hashes(module_dict, output)

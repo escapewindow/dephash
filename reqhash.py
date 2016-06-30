@@ -137,6 +137,7 @@ def main(name=None):
         # install deps and get their versions
         run_cmd([pip, 'install', '--no-deps'] + file_list)
         output = get_output([pip, 'freeze'])
+        print(output)
         module_dict = parse_pip_freeze(output)
         # special case pip, which doesn't show up in 'pip freeze'
         with open(req_dev_path, "r") as fh:
@@ -147,7 +148,9 @@ def main(name=None):
         print(pprint.pformat(module_dict))
         # get hashes from the downloaded files
         output = get_output([pip, 'hash', '--algorithm', 'sha512'] + file_list)
+        print(output)
         get_hashes(module_dict, output)
+        pprint.pprint(module_dict)
         req_prod_path = get_prod_path(req_dev_path)
         print("Writing pinned+hashed requirements to {}".format(req_prod_path))
         print_prod_req(module_dict, sys.stdout)

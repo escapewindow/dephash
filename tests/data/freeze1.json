@@ -1,10 +1,4 @@
 {
-    "mercurial": {"version": "3.8.3"},
-    "pluggy": {"version": "0.3.1"},
-    "powerline-status": {"version": "2.4"},
-    "py": {"version": "1.4.31"},
     "six": {"version": "1.10.0"},
-    "tox": {"version": "2.3.1"},
-    "vboxapi": {"version": "1.0"},
-    "virtualenv": {"version": "14.0.6"}
+    "virtualenv": {"version": "15.0.2"}
 }

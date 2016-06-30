@@ -7,6 +7,7 @@ import pytest
 import reqhash
 import six
 import subprocess
+import tempfile
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
 
@@ -42,6 +43,14 @@ GET_HASHES_PARAMS = [(
     os.path.join(DATA_DIR, "freeze2.json"),
     os.path.join(DATA_DIR, "hash2.txt"),
     os.path.join(DATA_DIR, "prod2.json"),
+)]
+
+PRINT_PROD_REQ_PARAMS = [(
+    os.path.join(DATA_DIR, "prod1.json"),
+    os.path.join(DATA_DIR, "prod1.txt"),
+), (
+    os.path.join(DATA_DIR, "prod2.json"),
+    os.path.join(DATA_DIR, "prod2.txt"),
 )]
 
 
@@ -122,3 +131,19 @@ def test_get_hashes_broken(params):
     module_dict["unknown-module"] = {"version": "unknown-version"}
     with pytest.raises(SystemExit):
         reqhash.get_hashes(module_dict, output)
+
+
+# print_prod_req {{{1
+@pytest.mark.parametrize("params", PRINT_PROD_REQ_PARAMS)
+def test_print_prod_req(params):
+    module_dict = load_json(params[0])
+    _, path = tempfile.mkstemp()
+    try:
+        with open(path, "w") as fh:
+            reqhash.print_prod_req(module_dict, fh)
+        with open(path, "r") as fh:
+            contents = fh.read()
+    finally:
+        fh.close()
+        os.remove(path)
+    assert contents == read_file(params[1])

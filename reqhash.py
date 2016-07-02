@@ -3,7 +3,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 from __future__ import absolute_import, division, print_function
-import glob
 import os
 from pip import main as pip_main
 import pprint
@@ -148,34 +147,22 @@ def main(name=None):
         return
     if len(sys.argv) != 2:
         usage()
-    tempdir = None
     venv_path = None
-    orig_dir = os.getcwd()
     try:
-        # get the absolute path of the dev requirements file, since we'll
-        # chdir later
-        req_dev_path = os.path.abspath(sys.argv[1])
-        # create tempdirs
-        venv_path = tempfile.mkdtemp()
-        tempdir = tempfile.mkdtemp()
-        os.chdir(tempdir)
-        # download all the dependencies
-        sys.argv = ['pip', 'download', '-r', req_dev_path]
-        pip_main()
         # create the virtualenv
+        venv_path = tempfile.mkdtemp()
         sys.argv = ['virtualenv', venv_path]
         virtualenv_main()
-        pip = os.path.join(venv_path, 'bin', 'pip')
-        file_list = glob.glob('*')
+        pip = [os.path.join(venv_path, 'bin', 'pip'), '--isolated']
         # install deps and get their versions
-        run_cmd([pip, 'install', '--no-deps'] + file_list)
-        output = get_output([pip, 'freeze'])
+        run_cmd(pip + ['install', '-r', req_dev_path])
+        output = get_output(pip + ['freeze'])
         print(output)
         module_dict = parse_pip_freeze(output)
         # special case pip, which doesn't show up in 'pip freeze'
         with open(req_dev_path, "r") as fh:
             if has_pip(fh.read()):
-                output = get_output([pip, '--version'])
+                output = get_output(pip + ['--version'])
                 pip_version = output.split(' ')[1]
                 module_dict['pip'] = pip_version
         print(pprint.pformat(module_dict))
@@ -184,9 +171,7 @@ def main(name=None):
         build_req_prod(module_dict, req_prod_path)
         print("Done.")
     finally:
-        os.chdir(orig_dir)
-        for path in (tempdir, venv_path):
-            rm(path)
+        rm(venv_path)
 
 
 main(name=__name__)

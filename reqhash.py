@@ -49,10 +49,13 @@ def to_str(obj):
 
 
 def rm(path):
-    try:
-        os.remove(path)
-    except FileNotFoundError:
-        pass
+    if path is not None and os.path.isdir(path):
+        shutil.rmtree(path)
+    else:
+        try:
+            os.remove(path)
+        except (OSError, TypeError):
+            pass
 
 
 def get_output(cmd, **kwargs):
@@ -183,8 +186,7 @@ def main(name=None):
     finally:
         os.chdir(orig_dir)
         for path in (tempdir, venv_path):
-            if path is not None and os.path.exists(path):
-                shutil.rmtree(path)
+            rm(path)
 
 
 main(name=__name__)

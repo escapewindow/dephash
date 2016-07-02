@@ -1,15 +1,15 @@
 {
-    "aiohttp": {"version": "0.21.6"},
-    "arrow": {"version": "0.8.0"},
-    "chardet": {"version": "2.3.0"},
-    "defusedxml": {"version": "0.4.1"},
-    "frozendict": {"version": "0.6"},
-    "jsonschema": {"version": "2.5.1"},
-    "mohawk": {"version": "0.3.2.1"},
-    "python-dateutil": {"version": "2.5.3"},
-    "requests": {"version": "2.10.0"},
-    "six": {"version": "1.10.0"},
-    "slugid": {"version": "1.0.7"},
-    "taskcluster": {"version": "0.3.4"},
-    "virtualenv": {"version": "15.0.2"}
+    "aiohttp": "0.21.6",
+    "arrow": "0.8.0",
+    "chardet": "2.3.0",
+    "defusedxml": "0.4.1",
+    "frozendict": "0.6",
+    "jsonschema": "2.5.1",
+    "mohawk": "0.3.2.1",
+    "python-dateutil": "2.5.3",
+    "requests": "2.10.0",
+    "six": "1.10.0",
+    "slugid": "1.0.7",
+    "taskcluster": "0.3.4",
+    "virtualenv": "15.0.2"
 }

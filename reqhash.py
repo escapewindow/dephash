@@ -97,10 +97,11 @@ def build_req_prod(module_dict, req_prod_path):
         _, tmppath = tempfile.mkstemp(text=True)
         with open(tmppath, "w") as fh:
             print("# Generated from reqhash.py + hashin.py", file=fh)
-        for key, version in module_dict.items():
+        for key, version in sorted(module_dict.items()):
             cmd = ["hashin", "{}=={}".format(key, version), tmppath, "sha512"]
             run_cmd(cmd)
         rm(req_prod_path)
+        print("Writing to {}".format(req_prod_path))
         shutil.copyfile(tmppath, req_prod_path)
         with open(req_prod_path, "r") as fh:
             print(fh.read())

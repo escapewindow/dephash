@@ -48,6 +48,13 @@ def to_str(obj):
     return obj
 
 
+def rm(path):
+    try:
+        os.remove(path)
+    except FileNotFoundError:
+        pass
+
+
 def get_output(cmd, **kwargs):
     """Run ``cmd``, then raise ``subprocess.CalledProcessError`` on non-zero
     exit code, or return stdout text on zero exit code.
@@ -82,51 +89,26 @@ def parse_pip_freeze(output):
     return module_dict
 
 
-def get_hashes(module_dict, output):
-    """Take the dictionary from ``parse_pip_freeze`` and the output from
-    ``pip hash``, and add the hash string into the appropriate place in the
-    dictionary:
-
-        {module_name: {'version': version, 'hash': '--hash=HASH'}, ...}
-
-    ``module_dict`` is modified in-place.
-
-    If there are any modules in ``module_dict`` with no hash information,
-    die.
+def build_req_prod(module_dict, req_prod_path):
+    """Use ``hashin`` and the dictionary from ``pip freeze`` to build a new
+    requirements file at req_prod_path
     """
-    # create a dict from the output
-    messages = []
-    lines = output.rstrip().split('\n')
-    it = iter(lines)
-    hashes = dict([(x.rstrip(':'), y.lstrip()) for x, y in zip(it, it)])
-    pprint.pprint(hashes)
-    for module, defn in module_dict.items():
-        # Yay module names and package names not matching!
-        regex_module = module.replace('-', '[_-]')
-        regex_string = PACKAGE_REGEX.format(module=regex_module,
-                                            version=defn['version'])
-        print(regex_string)
-        regex = re.compile(regex_string)
-        for filename, hashstring in hashes.items():
-            if regex.match(filename) is not None:
-                module_dict[module]['hash'] = hashstring
-                break
-        else:
-            messages.append("Can't find hash for {}!".format(module))
-    if messages:
-        die('\n'.join(messages))
+    try:
+        _, tmppath = tempfile.mkstemp(text=True)
+        with open(tmppath, "w") as fh:
+            print("# Generated from reqhash.py + hashin.py", file=fh)
+        for key, defn in module_dict.items():
+            cmd = ["hashin", "{}=={}".format(key, defn['version']), tmppath, "sha512"]
+            run_cmd(cmd)
+        rm(req_prod_path)
+        shutil.copyfile(tmppath, req_prod_path)
+        with open(req_prod_path, "r") as fh:
+            print(fh.read())
+    finally:
+        rm(tmppath)
 
 
-def print_prod_req(module_dict, fh):
-    """Take the dictionary from get_hashes and output it to the filehandle
-    ``fh``, in pinned+hashed requirements.txt format.
-    """
-    print("# Generated from reqhash.py", file=fh)
-    for module, defn in sorted(module_dict.items()):
-        print("{}=={} {}".format(module, defn['version'], defn['hash']),
-              file=fh)
-
-
+# TODO argparse this
 def get_prod_path(req_dev_path):
     """Given a development requirements.txt path, build a production
     requirements.txt path.  This just replaces ``-dev`` with ``-prod``,
@@ -194,15 +176,8 @@ def main(name=None):
                 module_dict['pip'] = {'version': pip_version}
         print(pprint.pformat(module_dict))
         # get hashes from the downloaded files
-        output = get_output([pip, 'hash', '--algorithm', 'sha512'] + file_list)
-        print(output)
-        get_hashes(module_dict, output)
-        pprint.pprint(module_dict)
         req_prod_path = get_prod_path(req_dev_path)
-        print("Writing pinned+hashed requirements to {}".format(req_prod_path))
-        print_prod_req(module_dict, sys.stdout)
-        with open(req_prod_path, "w") as fh:
-            print_prod_req(module_dict, fh)
+        build_req_prod(module_dict, req_prod_path)
         print("Done.")
     finally:
         os.chdir(orig_dir)

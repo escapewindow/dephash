@@ -6,7 +6,6 @@ import pytest
 import reqhash
 import six
 import subprocess
-import tempfile
 
 from . import DATA_DIR, load_json, read_file
 

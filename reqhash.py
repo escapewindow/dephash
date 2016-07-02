@@ -16,7 +16,7 @@ import tempfile
 from virtualenv import main as virtualenv_main
 
 PACKAGE_REGEX = r"""^{module}-{version}(\.tar\.gz|-py[23]\..*\.whl)$"""
-PIP_REGEX = r"""^pip[ >=<\d.]*($| *--hash)"""
+PIP_REGEX = r"""^pip[ >=<\d.]*(\\?$| *--hash)"""
 
 
 # helper functions {{{1

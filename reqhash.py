@@ -147,6 +147,7 @@ def main(name=None):
         return
     if len(sys.argv) != 2:
         usage()
+    req_dev_path = sys.argv[1]
     venv_path = None
     try:
         # create the virtualenv

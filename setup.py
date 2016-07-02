@@ -17,9 +17,10 @@ setup(
     },
     license="MPL2",
     install_requires=[
+        "hashin",
         "pip>=8.1.2",
         "six",
-        "virtualenv>=15.0.2",
+        "virtualenv",
     ],
     tests_require=[
         "tox",

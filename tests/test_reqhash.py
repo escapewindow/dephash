@@ -34,24 +34,6 @@ PIP_FREEZE_PARAMS = [(
     os.path.join(DATA_DIR, "freeze2.json"),
 )]
 
-GET_HASHES_PARAMS = [(
-    os.path.join(DATA_DIR, "freeze_withpip1.json"),
-    os.path.join(DATA_DIR, "hash1.txt"),
-    os.path.join(DATA_DIR, "prod1.json"),
-), (
-    os.path.join(DATA_DIR, "freeze2.json"),
-    os.path.join(DATA_DIR, "hash2.txt"),
-    os.path.join(DATA_DIR, "prod2.json"),
-)]
-
-PRINT_PROD_REQ_PARAMS = [(
-    os.path.join(DATA_DIR, "prod1.json"),
-    os.path.join(DATA_DIR, "prod1.txt"),
-), (
-    os.path.join(DATA_DIR, "prod2.json"),
-    os.path.join(DATA_DIR, "prod2.txt"),
-)]
-
 GET_PROD_PATH_PARAMS = [(
     os.path.join(DATA_DIR, "foo-dev.txt"),
     os.path.join(DATA_DIR, "foo-prod.txt"),

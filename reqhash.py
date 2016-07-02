@@ -80,12 +80,12 @@ def parse_pip_freeze(output):
     """Take the output from ``pip freeze`` and return a dictionary in the form
     of
 
-        {module_name: {'version': version}, ...}
+        {module_name: version, ...}
     """
     module_dict = {}
     for line in output.rstrip().split('\n'):
         module, version = line.split('==')
-        module_dict[module] = {'version': version}
+        module_dict[module] = version
     return module_dict
 
 
@@ -97,8 +97,8 @@ def build_req_prod(module_dict, req_prod_path):
         _, tmppath = tempfile.mkstemp(text=True)
         with open(tmppath, "w") as fh:
             print("# Generated from reqhash.py + hashin.py", file=fh)
-        for key, defn in module_dict.items():
-            cmd = ["hashin", "{}=={}".format(key, defn['version']), tmppath, "sha512"]
+        for key, version in module_dict.items():
+            cmd = ["hashin", "{}=={}".format(key, version), tmppath, "sha512"]
             run_cmd(cmd)
         rm(req_prod_path)
         shutil.copyfile(tmppath, req_prod_path)
@@ -173,7 +173,7 @@ def main(name=None):
             if has_pip(fh.read()):
                 output = get_output([pip, '--version'])
                 pip_version = output.split(' ')[1]
-                module_dict['pip'] = {'version': pip_version}
+                module_dict['pip'] = pip_version
         print(pprint.pformat(module_dict))
         # get hashes from the downloaded files
         req_prod_path = get_prod_path(req_dev_path)

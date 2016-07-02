@@ -117,41 +117,6 @@ def test_parse_pip_freeze(params):
     assert module_dict == load_json(params[1])
 
 
-# get_hashes {{{1
-@pytest.mark.parametrize("params", GET_HASHES_PARAMS)
-def test_get_hashes(params):
-    module_dict = load_json(params[0])
-    output = read_file(params[1])
-    result = load_json(params[2])
-    reqhash.get_hashes(module_dict, output)
-    assert module_dict == result
-
-
-@pytest.mark.parametrize("params", GET_HASHES_PARAMS)
-def test_get_hashes_broken(params):
-    module_dict = load_json(params[0])
-    output = read_file(params[1])
-    module_dict["unknown-module"] = {"version": "unknown-version"}
-    with pytest.raises(SystemExit):
-        reqhash.get_hashes(module_dict, output)
-
-
-# print_prod_req {{{1
-@pytest.mark.parametrize("params", PRINT_PROD_REQ_PARAMS)
-def test_print_prod_req(params):
-    module_dict = load_json(params[0])
-    _, path = tempfile.mkstemp()
-    try:
-        with open(path, "w") as fh:
-            reqhash.print_prod_req(module_dict, fh)
-        with open(path, "r") as fh:
-            contents = fh.read()
-    finally:
-        fh.close()
-        os.remove(path)
-    assert contents == read_file(params[1])
-
-
 # get_prod_path {{{1
 @pytest.mark.parametrize("params", GET_PROD_PATH_PARAMS)
 def test_get_prod_path(params):

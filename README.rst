@@ -14,6 +14,11 @@ Production installs sometimes call for pinning package versions; hash checking a
 With ``reqhash``, a permissive ``requirements-dev.txt`` can be transformed into a fully version-pinned, hashed ``requirements-prod.txt``.
 
 -------
+IMPORTANT
+-------
+After writing this, I found [hashin](https://pypi.python.org/pypi/hashin) and [pip-tools](https://github.com/nvie/pip-tools/).  These seem like more mature tools; [using them together](https://github.com/nvie/pip-tools/issues/303) seems like the winning solution.
+
+-------
 Usage
 -------
 

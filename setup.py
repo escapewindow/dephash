@@ -12,13 +12,14 @@ setup(
     zip_safe=True,
     entry_points={
         "console_scripts": [
-            "reqhash = reqhash:main",
+            "reqhash = reqhash:cli",
         ],
     },
     license="MPL2",
     install_requires=[
+        "click",
         "hashin",
-        "pip>=8.1.2",
+        "pip>=8.0.0",
         "six",
         "virtualenv",
     ],

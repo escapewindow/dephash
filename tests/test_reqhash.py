@@ -33,14 +33,6 @@ PIP_FREEZE_PARAMS = [(
     os.path.join(DATA_DIR, "freeze2.json"),
 )]
 
-GET_PROD_PATH_PARAMS = [(
-    os.path.join(DATA_DIR, "foo-dev.txt"),
-    os.path.join(DATA_DIR, "foo-prod.txt"),
-), (
-    os.path.join(DATA_DIR, "foo-dv.txt"),
-    os.path.join(DATA_DIR, "reqhash.out"),
-)]
-
 HAS_PIP_PARAMS = [
     (os.path.join(DATA_DIR, "dev1.txt"), True),
     (os.path.join(DATA_DIR, "dev2.txt"), False),
@@ -62,8 +54,7 @@ def test_usage():
 
 # run_cmd {{{1
 def test_run_cmd_success():
-    val = reqhash.run_cmd("echo")
-    assert val == 0
+    reqhash.run_cmd("echo")
 
 
 def test_run_cmd_failure():
@@ -96,12 +87,6 @@ def test_parse_pip_freeze(params):
     output = read_file(params[0])
     module_dict = reqhash.parse_pip_freeze(output)
     assert module_dict == load_json(params[1])
-
-
-# get_prod_path {{{1
-@pytest.mark.parametrize("params", GET_PROD_PATH_PARAMS)
-def test_get_prod_path(params):
-    assert reqhash.get_prod_path(params[0]) == params[1]
 
 
 # has_pip {{{1

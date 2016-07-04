@@ -7,9 +7,7 @@ setup(
     author="Aki Sasaki",
     author_email="aki@escapewindow.com",
     url="https://github.com/escapewindow/dephash",
-    packages=find_packages(),
-    include_package_data=True,
-    zip_safe=True,
+    py_modules=["dephash"],
     entry_points={
         "console_scripts": [
             "dephash = dephash:cli",

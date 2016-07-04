@@ -1,6 +1,9 @@
+CHANGELOG.md
 include LICENSE
 include README.rst
 include requirements*.txt
+
+include dephash.py
 
 recursive-exclude tests *
 recursive-exclude __pycache__ *

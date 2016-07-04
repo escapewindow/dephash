@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 """Integration tests for reqhash
 """
+import logging
 import os
 import pytest
+import random
 import reqhash
+import string
 import sys
 import tempfile
 
@@ -27,10 +30,33 @@ if sys.version_info >= (3, 5):
 def test_integration(req_path, mocker):
     try:
         _, tmppath = tempfile.mkstemp()
-        mocker.patch.object(sys, 'argv', new=["reqhash", "-o", tmppath,  req_path])
+        mocker.patch.object(sys, 'argv', new=["reqhash", "-o", tmppath, req_path])
         with pytest.raises(SystemExit):
             reqhash.cli()
         output = read_file(tmppath)
         assert output == read_file(req_path)
     finally:
         os.remove(tmppath)
+
+
+@pytest.mark.skipif(os.environ.get("NO_TESTS_OVER_WIRE"), reason=SKIP_REASON)
+@pytest.mark.parametrize("req_path", INTEGRATION_PARAMS)
+def test_integration_cmdln(req_path, mocker):
+    logger = logging.getLogger(
+        ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits)
+                for _ in range(6))
+    )
+    mocker.patch.object(reqhash, 'log', new=logger)
+    try:
+        _, logfile = tempfile.mkstemp()
+        _, output_file = tempfile.mkstemp()
+        mocker.patch.object(sys, 'argv', new=["reqhash", "-v", "-l", logfile, req_path])
+        with open(output_file, "w") as fh:
+            mocker.patch.object(sys, 'stdout', new=fh)
+            with pytest.raises(SystemExit):
+                reqhash.main()
+        output = read_file(output_file)
+        assert output == read_file(req_path)
+    finally:
+        os.remove(output_file)
+        os.remove(logfile)

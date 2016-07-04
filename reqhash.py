@@ -40,7 +40,7 @@ def log_output(fh):
     output = fh.read()
     if not output:
         return
-    if six.PY3 and isinstance(output, six.binary_type):
+    if six.PY3 and isinstance(output, six.binary_type):  # pragma: no branch
         output = output.decode('utf-8')
     log.debug(output)
 

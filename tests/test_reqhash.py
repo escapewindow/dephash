@@ -62,6 +62,11 @@ def test_run_cmd_failure():
         reqhash.run_cmd(['bash', '-c', 'exit 1'])
 
 
+# rm {{{1
+def test_nonexistent_rm():
+    reqhash.rm('this_file_does_not_exist_alksdjfalskjdfskfjdlk')
+
+
 # to_str {{{1
 @pytest.mark.parametrize("params", TO_STR_PARAMS, ids=TO_STR_IDS)
 def test_to_str(params):

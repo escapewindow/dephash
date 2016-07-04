@@ -28,12 +28,6 @@ def die(message, exit_code=1):
     sys.exit(exit_code)
 
 
-def usage():
-    """Shortcut function to print usage and die
-    """
-    die("Usage: {} REQUIREMENTS_PATH".format(sys.argv[0]))
-
-
 def log_output(fh, log_level=logging.DEBUG):
     """Bare bones subprocess.Popen logger, with no streaming
     """
@@ -67,9 +61,11 @@ def to_str(obj):
 
 def rm(path):
     if path is not None and os.path.isdir(path):
+        log.debug("rmtree %s", path)
         shutil.rmtree(path)
     else:
         try:
+            log.debug("removing %s", path)
             os.remove(path)
         except (OSError, TypeError):
             pass
@@ -143,13 +139,12 @@ def has_pip(contents):
 
 
 # cli {{{1
-@click.command()
+@click.group()
 @click.option("-v", "--verbose", is_flag=True, help="Enable debug logging")
-@click.option("--virtualenv", metavar="<path>", default='virtualenv', help="Path to virtualenv")
 @click.option("-l", "--log-file", metavar="<logfile>", type=str, help="Specify a file to log to")
-@click.option("-o", "--output-file", metavar="<requirements_prod>", type=str, help="Specify a file to write to")
-@click.argument("requirements_dev")
-def cli(verbose, virtualenv, log_file, output_file, requirements_dev):
+def cli(verbose, log_file):
+    """Quick'n'dirty script to help with pinned python dependencies.
+    """
     if verbose:
         log.setLevel(logging.DEBUG)
     else:
@@ -158,6 +153,46 @@ def cli(verbose, virtualenv, log_file, output_file, requirements_dev):
         log.addHandler(logging.FileHandler(log_file))
     else:
         log.addHandler(logging.StreamHandler())
+
+
+# outdated {{{1
+@cli.command()
+@click.option("--virtualenv", default='virtualenv', help="Path to virtualenv command")
+@click.argument("path", type=click.Path(exists=True))
+def outdated(virtualenv, path):
+    """Find outdated packages in PATH, which can either be a requirements
+    file or a virtualenv.
+    """
+    venv_path = None
+    if os.path.isdir(path):
+        venv_path = path
+        tmp_path = None
+        pip = [os.path.join(venv_path, 'bin', 'pip'), '--isolated']
+    try:
+        # create the virtualenv
+        if venv_path is None:
+            venv_path = tmp_path = tempfile.mkdtemp()
+            venv_cmd = [virtualenv, venv_path]
+            run_cmd(venv_cmd)
+            pip = [os.path.join(venv_path, 'bin', 'pip'), '--isolated']
+            run_cmd(pip + ['install', '-r', path])
+        pip_output = get_output(pip + ['list', '--outdated']).rstrip()
+        if pip_output:
+            log.error("Found outdated packages in %s:", path)
+            log.error(pip_output)
+            sys.exit(1)
+    finally:
+        rm(tmp_path)
+
+
+# gen {{{1
+@cli.command()
+@click.option("--virtualenv", default='virtualenv', help="Path to virtualenv command")
+@click.option("-o", "--output-file", metavar="<requirements_prod>", type=click.Path(), help="Specify a file to write to; otherwise output to STDOUT")
+@click.argument("requirements_dev")
+def gen(virtualenv, output_file, requirements_dev):
+    """Generate expanded python requirements, pinned to version+hashes.
+    """
     venv_path = None
     try:
         # create the virtualenv

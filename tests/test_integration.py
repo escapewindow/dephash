@@ -30,9 +30,9 @@ if sys.version_info >= (3, 5):
 def test_integration(req_path, mocker):
     try:
         _, tmppath = tempfile.mkstemp()
-        mocker.patch.object(sys, 'argv', new=["dephash", "-o", tmppath, req_path])
+        mocker.patch.object(sys, 'argv', new=["dephash", "gen", "-o", tmppath, req_path])
         with pytest.raises(SystemExit):
-            dephash.cli()
+            dephash.gen()
         output = read_file(tmppath)
         assert output == read_file(req_path)
     finally:
@@ -50,7 +50,7 @@ def test_integration_cmdln(req_path, mocker):
     try:
         _, logfile = tempfile.mkstemp()
         _, output_file = tempfile.mkstemp()
-        mocker.patch.object(sys, 'argv', new=["dephash", "-v", "-l", logfile, req_path])
+        mocker.patch.object(sys, 'argv', new=["dephash", "gen", "-v", "-l", logfile, req_path])
         with open(output_file, "w") as fh:
             mocker.patch.object(sys, 'stdout', new=fh)
             with pytest.raises(SystemExit):

@@ -41,15 +41,10 @@ HAS_PIP_PARAMS = [
 ]
 
 
-# die, usage {{{1
+# die {{{1
 def test_die():
     with pytest.raises(SystemExit):
         dephash.die("foo")
-
-
-def test_usage():
-    with pytest.raises(SystemExit):
-        dephash.usage()
 
 
 # run_cmd {{{1

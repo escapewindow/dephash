@@ -1,4 +1,4 @@
-# Generated from reqhash.py + hashin.py
+# Generated from dephash.py + hashin.py
 click==6.6 \
     --hash=sha512:5650cfe6c8b55a7e823e22248964143278d61383dac63497508a864807f1950f9dd5d76ce6a501e589dd81fed6e2a1248d3f8973be25a91950896b7408dc88bc
 hashin==0.6.0 \

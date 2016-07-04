@@ -1,4 +1,4 @@
-# Generated from reqhash.py + hashin.py
+# Generated from dephash.py + hashin.py
 aiohttp==0.21.6 \
     --hash=sha512:5768c6bf0a636690dc92c66728177897b0b00242fc56f26ed4e362069eccfdbfb0d0a3fc397a6b60463cae6d96f41fd37bd07f30f9bdd769ee5f662c25dad791 \
     --hash=sha512:a72dfebe741bc03abda941dc2e008d7b6e0b15008d18d0619cefcca4a2edef712d638285f4cb778e89cf9b87bc9795446575907cb120ffe7a7d86dd23b52902c \

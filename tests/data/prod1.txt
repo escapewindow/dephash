@@ -1,4 +1,4 @@
-# Generated from reqhash.py + hashin.py
+# Generated from dephash.py + hashin.py
 hashin==0.6.0 \
     --hash=sha512:fc3d2b4ca5a34a989f1d4ce75cc5f345b650b76255f4d574c939db6281fa97d4315d8aab6bc1592c74f7a5a1c961ee5e3e75a2e9d9ae92da06c185bae384bb2e \
     --hash=sha512:8562ade17e94f28fb7c2999ca9da080c1897948948aa5440783908186c7300afebfebbe4384dda8fbde465d2ffbd491730043446253ccf0e93e2cb1d6cf19a0d

@@ -1,18 +1,18 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="reqhash",
+    name="dephash",
     version="0.1.0",
-    description="requirements.txt hasher",
+    description="requirements.txt dependency hasher",
     author="Aki Sasaki",
     author_email="aki@escapewindow.com",
-    url="https://github.com/escapewindow/reqhash",
+    url="https://github.com/escapewindow/dephash",
     packages=find_packages(),
     include_package_data=True,
     zip_safe=True,
     entry_points={
         "console_scripts": [
-            "reqhash = reqhash:cli",
+            "dephash = dephash:cli",
         ],
     },
     license="MPL2",

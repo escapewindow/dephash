@@ -116,7 +116,7 @@ def build_req_prod(module_dict, req_prod_path):
     try:
         _, tmppath = tempfile.mkstemp(text=True)
         with open(tmppath, "w") as fh:
-            print("# Generated from reqhash.py + hashin.py", file=fh)
+            print("# Generated from dephash.py + hashin.py", file=fh)
         for key, version in sorted(module_dict.items()):
             cmd = ["hashin", "{}=={}".format(key, version), tmppath, "sha512"]
             run_cmd(cmd)

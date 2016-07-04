@@ -163,7 +163,8 @@ def cli(verbose, log_file):
     if log_file:
         log.addHandler(logging.FileHandler(log_file))
     else:
-        log.addHandler(logging.StreamHandler())
+        if len(log.handlers) == 0:
+            log.addHandler(logging.StreamHandler())
 
 
 # outdated {{{1

@@ -34,7 +34,7 @@ def usage():
     die("Usage: {} REQUIREMENTS_PATH".format(sys.argv[0]))
 
 
-def log_output(fh):
+def log_output(fh, log_level=logging.DEBUG):
     """Bare bones subprocess.Popen logger, with no streaming
     """
     output = fh.read()
@@ -42,10 +42,10 @@ def log_output(fh):
         return
     if six.PY3 and isinstance(output, six.binary_type):  # pragma: no branch
         output = output.decode('utf-8')
-    log.debug(output)
+    log.log(log_level, output)
 
 
-def run_cmd(cmd, **kwargs):
+def run_cmd(cmd, log_level=logging.DEBUG, **kwargs):
     """Print the command to run, then run it through ``subprocess.check_call``
     """
     log.debug("Running {}".format(cmd))
@@ -163,12 +163,8 @@ def cli(verbose, virtualenv, log_file, output_file, requirements_dev):
         # create the virtualenv
         venv_path = tempfile.mkdtemp()
         venv_cmd = [virtualenv, venv_path]
-        if not verbose:
-            venv_cmd.append("-q")
         run_cmd(venv_cmd)
         pip = [os.path.join(venv_path, 'bin', 'pip'), '--isolated']
-        if not verbose:
-            pip.append("-q")
         # install deps and get their versions
         run_cmd(pip + ['install', '-r', requirements_dev])
         pip_output = get_output(pip + ['freeze'])

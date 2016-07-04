@@ -188,7 +188,8 @@ def outdated(virtualenv, path):
 # gen {{{1
 @cli.command()
 @click.option("--virtualenv", default='virtualenv', help="Path to virtualenv command")
-@click.option("-o", "--output-file", metavar="<requirements_prod>", type=click.Path(), help="Specify a file to write to; otherwise output to STDOUT")
+@click.option("-o", "--output-file", metavar="<requirements_prod>", type=click.Path(),
+              help="Specify a file to write to; otherwise output to STDOUT")
 @click.argument("requirements_dev")
 def gen(virtualenv, output_file, requirements_dev):
     """Generate expanded python requirements, pinned to version+hashes.

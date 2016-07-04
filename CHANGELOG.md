@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.2.0] - 2016-07-04
 ### Changed
 - Rename to `dephash` since there is already a `reqhash` in pypi
+- Moved `dephash` functionality to `dephash gen`
+
+### Added
+- Added `dephash outdated` to check for outdated files
 
 ## [0.1.0] - 2016-07-04
 ### Changed

@@ -19,7 +19,7 @@ setup(
     install_requires=[
         "click",
         "hashin",
-        "pip>=8.0.0",
+        "pip>=8.1.2",
         "six",
         "virtualenv",
     ],
@@ -30,7 +30,6 @@ setup(
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     )

@@ -17,8 +17,10 @@ With ``dephash``, a permissive ``requirements-dev.txt`` can be transformed into 
 Usage
 -------
 
+.. code-block:: bash
+
     # Generate pinned+hashed requirements-prod.txt
     dephash [-v] [-l,--logfile LOGFILE] gen requirements-dev.txt > requirements-prod.txt
-
+    
     # Check for outdated packages in PATH, where PATH is a virtualenv or requirements file
     dephash [-v] [-l,--logfile LOGFILE] outdated PATH

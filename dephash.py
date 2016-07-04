@@ -92,6 +92,10 @@ def get_output(cmd, **kwargs):
         outfile.close()
 
 
+def get_pip_command(path_to_pip):
+    return [path_to_pip, "--isolated"]
+
+
 def parse_pip_freeze(output):
     """Take the output from ``pip freeze`` and return a dictionary in the form
     of
@@ -138,6 +142,13 @@ def has_pip(contents):
     return False
 
 
+def create_virtualenv(virtualenv_cmd, venv_path, req_path):
+    venv_cmd = [virtualenv_cmd, venv_path]
+    run_cmd(venv_cmd)
+    pip = get_pip_command(os.path.join(venv_path, 'bin', 'pip'))
+    run_cmd(pip + ['install', '-r', req_path])
+
+
 # cli {{{1
 @click.group()
 @click.option("-v", "--verbose", is_flag=True, help="Enable debug logging")
@@ -167,15 +178,12 @@ def outdated(virtualenv, path):
     if os.path.isdir(path):
         venv_path = path
         tmp_path = None
-        pip = [os.path.join(venv_path, 'bin', 'pip'), '--isolated']
     try:
         # create the virtualenv
         if venv_path is None:
             venv_path = tmp_path = tempfile.mkdtemp()
-            venv_cmd = [virtualenv, venv_path]
-            run_cmd(venv_cmd)
-            pip = [os.path.join(venv_path, 'bin', 'pip'), '--isolated']
-            run_cmd(pip + ['install', '-r', path])
+            create_virtualenv(virtualenv, venv_path, path)
+        pip = get_pip_command(os.path.join(venv_path, 'bin', 'pip'))
         pip_output = get_output(pip + ['list', '--outdated']).rstrip()
         if pip_output:
             log.error("Found outdated packages in %s:", path)
@@ -198,11 +206,9 @@ def gen(virtualenv, output_file, requirements_dev):
     try:
         # create the virtualenv
         venv_path = tempfile.mkdtemp()
-        venv_cmd = [virtualenv, venv_path]
-        run_cmd(venv_cmd)
-        pip = [os.path.join(venv_path, 'bin', 'pip'), '--isolated']
-        # install deps and get their versions
-        run_cmd(pip + ['install', '-r', requirements_dev])
+        create_virtualenv(virtualenv, venv_path, requirements_dev)
+        pip = get_pip_command(os.path.join(venv_path, 'bin', 'pip'))
+        # get installed packages+versions
         pip_output = get_output(pip + ['freeze'])
         log.debug(pip_output)
         module_dict = parse_pip_freeze(pip_output)

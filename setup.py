@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="dephash",
-    version="0.1.0",
+    version="0.2.0",
     description="requirements.txt dependency hasher",
     author="Aki Sasaki",
     author_email="aki@escapewindow.com",

@@ -16,7 +16,7 @@ setup(
     license="MPL2",
     install_requires=[
         "click",
-        "hashin",
+        "hashin>=0.7.1",
         "pip>=8.1.2",
         "six",
         "virtualenv",

@@ -117,9 +117,11 @@ def build_req_prod(module_dict, req_prod_path):
         _, tmppath = tempfile.mkstemp(text=True)
         with open(tmppath, "w") as fh:
             print("# Generated from dephash.py + hashin.py", file=fh)
+        cmd = ["hashin"]
         for key, version in sorted(module_dict.items()):
-            cmd = ["hashin", "{}=={}".format(key, version), tmppath, "sha512"]
-            run_cmd(cmd)
+            cmd.append("{}=={}".format(key, version))
+        cmd.extend(["-r", tmppath, "-a", "sha512"])
+        run_cmd(cmd)
         if req_prod_path is not None:
             rm(req_prod_path)
             log.debug("Writing to {}".format(req_prod_path))

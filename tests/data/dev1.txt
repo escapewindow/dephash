@@ -1,4 +1,4 @@
-hashin>=0.6.0
+hashin>=0.7.0
 pip>=8.1.2
 six
 virtualenv>=15.0.2

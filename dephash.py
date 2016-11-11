@@ -96,6 +96,11 @@ def get_pip_command(path_to_pip):
     return [path_to_pip, "--isolated"]
 
 
+def get_pip_version(path_to_pip):
+    output = to_str(subprocess.check_output([path_to_pip, "--version"]))
+    return int(output.split(' ')[1].split('.')[0])
+
+
 def parse_pip_freeze(output):
     """Take the output from ``pip freeze`` and return a dictionary in the form
     of
@@ -187,7 +192,10 @@ def outdated(virtualenv, path):
             venv_path = tmp_path = tempfile.mkdtemp()
             create_virtualenv(virtualenv, venv_path, path)
         pip = get_pip_command(os.path.join(venv_path, 'bin', 'pip'))
-        pip_output = get_output(pip + ['list', '--outdated']).rstrip()
+        version = get_pip_version(pip[0])
+        command = pip + ['list', '--outdated']
+        version > 8 and command.append("--format=columns")
+        pip_output = get_output(command).rstrip()
         if pip_output:
             log.error("Found outdated packages in %s:", path)
             log.error(pip_output)

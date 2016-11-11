@@ -37,7 +37,6 @@ HAS_PIP_PARAMS = [
     (os.path.join(DATA_DIR, "dev1.txt"), True),
     (os.path.join(DATA_DIR, "dev2.txt"), False),
     (os.path.join(DATA_DIR, "prod1.txt"), True),
-    (os.path.join(DATA_DIR, "prod2.txt"), False),
 ]
 
 

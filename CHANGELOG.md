@@ -11,6 +11,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.3.0] - 2016-11-10
 ### Fixed
 - hashin 0.7.0 broke backwards compatibility; dephash 0.3.0 fixes that and requires `hashin>=0.7.1`
+- fixed the path to hashin if you haven't activated your virtualenv.
+- updated the `tests/data/prod1.txt` file with updated dephash `requirements-prod.txt`
+
+### Removed
+- removed `tests/data/prod2.txt`
 
 ## [0.2.0] - 2016-07-04
 ### Changed

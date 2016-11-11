@@ -122,7 +122,8 @@ def build_req_prod(module_dict, req_prod_path, venv_path):
         _, tmppath = tempfile.mkstemp(text=True)
         with open(tmppath, "w") as fh:
             print("# Generated from dephash.py + hashin.py", file=fh)
-        cmd = [os.path.join(venv_path, "bin", "hashin")]
+        hashin_path = os.path.join(os.path.dirname(sys.executable), "hashin")
+        cmd = [hashin_path]
         for key, version in sorted(module_dict.items()):
             cmd.append("{}=={}".format(key, version))
         cmd.extend(["-r", tmppath, "-a", "sha512"])
@@ -225,7 +226,7 @@ def gen(virtualenv, output_file, requirements_dev):
         module_dict = parse_pip_freeze(pip_output)
         # special case pip, which doesn't show up in 'pip freeze'
         with open(requirements_dev, "r") as fh:
-            if has_pip(fh.read()):
+            if has_pip(fh.read()):  # pragma: no branch
                 pip_output = get_output(pip + ['--version'])
                 pip_version = pip_output.split(' ')[1]
                 module_dict['pip'] = pip_version

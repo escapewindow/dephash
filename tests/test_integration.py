@@ -22,8 +22,6 @@ SKIP_REASON = "NO_TESTS_OVER_WIRE: skipping integration test"
 GEN_PARAMS = [
     os.path.join(DATA_DIR, "prod1.txt"),
 ]
-if sys.version_info >= (3, 5):
-    GEN_PARAMS.append(os.path.join(DATA_DIR, "prod2.txt"))
 PROD_REQ_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'requirements-prod.txt')
 DEV_REQ_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'requirements-dev.txt')
 

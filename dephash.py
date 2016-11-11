@@ -114,7 +114,7 @@ def parse_pip_freeze(output):
     return module_dict
 
 
-def build_req_prod(module_dict, req_prod_path):
+def build_req_prod(module_dict, req_prod_path, venv_path):
     """Use ``hashin`` and the dictionary from ``pip freeze`` to build a new
     requirements file at req_prod_path
     """
@@ -122,7 +122,7 @@ def build_req_prod(module_dict, req_prod_path):
         _, tmppath = tempfile.mkstemp(text=True)
         with open(tmppath, "w") as fh:
             print("# Generated from dephash.py + hashin.py", file=fh)
-        cmd = ["hashin"]
+        cmd = [os.path.join(venv_path, "bin", "hashin")]
         for key, version in sorted(module_dict.items()):
             cmd.append("{}=={}".format(key, version))
         cmd.extend(["-r", tmppath, "-a", "sha512"])
@@ -231,7 +231,7 @@ def gen(virtualenv, output_file, requirements_dev):
                 module_dict['pip'] = pip_version
         log.debug(pprint.pformat(module_dict))
         # build hashed requirements file
-        build_req_prod(module_dict, output_file)
+        build_req_prod(module_dict, output_file, venv_path)
         log.debug("Done.")
     finally:
         rm(venv_path)

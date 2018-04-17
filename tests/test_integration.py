@@ -22,6 +22,9 @@ SKIP_REASON = "NO_TESTS_OVER_WIRE: skipping integration test"
 GEN_PARAMS = [
     os.path.join(DATA_DIR, "prod1.txt"),
 ]
+GEN_PARAMS_SHA256 = [
+    os.path.join(DATA_DIR, "prod1_sha256.txt"),
+]
 PROD_REQ_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'requirements-prod.txt')
 DEV_REQ_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'requirements-dev.txt')
 
@@ -29,10 +32,33 @@ DEV_REQ_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'require
 # gen tests against test prod.txt reqfiles {{{1
 @pytest.mark.skipif(os.environ.get("NO_TESTS_OVER_WIRE"), reason=SKIP_REASON)
 @pytest.mark.parametrize("req_path", GEN_PARAMS)
-def test_gen(req_path, mocker):
+@pytest.mark.parametrize("algorithm", (None, "sha512"))
+def test_gen(req_path, algorithm, mocker):
+    extra_args = []
+    if algorithm:
+        extra_args = ["-a", algorithm]
     try:
         _, tmppath = tempfile.mkstemp()
-        mocker.patch.object(sys, 'argv', new=["dephash", "gen", "-o", tmppath, req_path])
+        mocker.patch.object(sys, 'argv', new=(
+            ["dephash", "gen"] + extra_args + ["-o", tmppath, req_path])
+        )
+        with pytest.raises(SystemExit):
+            dephash.cli()
+        output = read_file(tmppath)
+        assert output == read_file(req_path)
+    finally:
+        os.remove(tmppath)
+
+
+# gen tests against test prod_sha256.txt reqfiles {{{1
+@pytest.mark.skipif(os.environ.get("NO_TESTS_OVER_WIRE"), reason=SKIP_REASON)
+@pytest.mark.parametrize("req_path", GEN_PARAMS_SHA256)
+def test_gen_sha256(req_path, mocker):
+    try:
+        _, tmppath = tempfile.mkstemp()
+        mocker.patch.object(
+            sys, 'argv',
+            new=["dephash", "gen", "-a", "sha256", "-o", tmppath, req_path])
         with pytest.raises(SystemExit):
             dephash.cli()
         output = read_file(tmppath)

@@ -114,7 +114,7 @@ def parse_pip_freeze(output):
     return module_dict
 
 
-def build_req_prod(module_dict, req_prod_path, venv_path, algorithm):
+def build_req_prod(module_dict, req_prod_path, venv_path, algorithm='sha512'):
     """Use ``hashin`` and the dictionary from ``pip freeze`` to build a new
     requirements file at req_prod_path
     """

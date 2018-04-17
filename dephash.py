@@ -114,7 +114,7 @@ def parse_pip_freeze(output):
     return module_dict
 
 
-def build_req_prod(module_dict, req_prod_path, venv_path):
+def build_req_prod(module_dict, req_prod_path, venv_path, algorithm):
     """Use ``hashin`` and the dictionary from ``pip freeze`` to build a new
     requirements file at req_prod_path
     """
@@ -126,7 +126,7 @@ def build_req_prod(module_dict, req_prod_path, venv_path):
         cmd = [hashin_path]
         for key, version in sorted(module_dict.items()):
             cmd.append("{}=={}".format(key, version))
-        cmd.extend(["-r", tmppath, "-a", "sha512"])
+        cmd.extend(["-r", tmppath, "-a", algorithm])
         run_cmd(cmd)
         if req_prod_path is not None:
             rm(req_prod_path)
@@ -210,8 +210,10 @@ def outdated(virtualenv, path):
 @click.option("--virtualenv", default='virtualenv', help="Path to virtualenv command")
 @click.option("-o", "--output-file", metavar="<requirements_prod>", type=click.Path(),
               help="Specify a file to write to; otherwise output to STDOUT")
+@click.option("-a", "--algorithm", default="sha512",
+              help="Hash algorithm to use, passed to hashin")
 @click.argument("requirements_dev")
-def gen(virtualenv, output_file, requirements_dev):
+def gen(virtualenv, output_file, algorithm, requirements_dev):
     """Generate expanded python requirements, pinned to version+hashes.
     """
     venv_path = None
@@ -232,7 +234,7 @@ def gen(virtualenv, output_file, requirements_dev):
                 module_dict['pip'] = pip_version
         log.debug(pprint.pformat(module_dict))
         # build hashed requirements file
-        build_req_prod(module_dict, output_file, venv_path)
+        build_req_prod(module_dict, output_file, venv_path, algorithm)
         log.debug("Done.")
     finally:
         rm(venv_path)

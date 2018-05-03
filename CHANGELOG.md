@@ -8,6 +8,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 ### Removed
 
+## [1.0.0] - 2018-05-03
+### Added
+- added `-a` option to specify hashing algorithm
+- added py36 testing
+
+### Removed
+- removed py34 support
+
 ## [0.3.0] - 2016-11-10
 ### Fixed
 - hashin 0.7.0 broke backwards compatibility; dephash 0.3.0 fixes that and requires `hashin>=0.7.1`

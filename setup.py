@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name="dephash",
-    version="0.3.0",
+    version="1.0.0",
     description="requirements.txt dependency hasher",
     author="Aki Sasaki",
     author_email="aki@escapewindow.com",
@@ -28,7 +28,7 @@ setup(
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     )
 )

@@ -2,6 +2,10 @@
 dephash
 ===============================
 
+---------
+You probably want `pip-compile <https://pypi.org/project/pip-tools/>`_ or `pip-compile-multi <https://pypi.org/project/pip-compile-multi/>`_. Dephash was `written before pip-tools allowed for pinning with hashes <https://escapewindow.dreamwidth.org/247093.html>`_.
+---------
+
 .. image:: https://travis-ci.org/escapewindow/dephash.svg?branch=master
     :target: https://travis-ci.org/escapewindow/dephash
 
